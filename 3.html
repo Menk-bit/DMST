@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AT & DD - Gọi Đầu Bếp Gia Đình</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#4CAF50', 
+                            darkGreen: '#2E7D32',
+                            orange: '#FF7043', 
+                            bg: '#F3F4F6',
+                            text: '#333333'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Ẩn thanh cuộn nhưng vẫn cuộn được */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        /* Thanh cuộn tùy chỉnh cho danh sách món */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Checkbox màu xanh thương hiệu */
+        .custom-checkbox:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-700 h-screen flex flex-col overflow-hidden font-sans">
+
+    <header class="bg-white shadow-sm z-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center cursor-pointer">
+                    <div class="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center text-white text-xl mr-2">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-brand-darkGreen">AT & DD</span>
+                </div>
+
+                <nav class="hidden md:flex space-x-8">
+                    <a href="1.html" class="text-gray-500 hover:text-brand-green px-1 pt-1 flex items-center transition">
+                        <i class="fa-solid fa-user-doctor mr-2"></i> Chuyên Gia DD
+                    </a>
+                    <a href="2.html" class="text-gray-500 hover:text-brand-green px-1 pt-1 flex items-center transition">
+                        <i class="fa-solid fa-book-open mr-2"></i> Menu
+                    </a>
+                    <a href="3.html" class="text-brand-orange font-bold border-b-2 border-brand-orange px-1 pt-1 flex items-center">
+                        <i class="fa-solid fa-bowl-food mr-2"></i> Nấu Ăn Tại Nhà
+                    </a>
+                    <a href="4.html" class="text-gray-500 hover:text-brand-green px-1 pt-1 flex items-center transition">
+                        <i class="fa-solid fa-basket-shopping mr-2"></i> Thực Phẩm
+                    </a>
+                    <a href="5.html" class="text-brand-green font-bold px-1 pt-1 flex items-center transition">
+                        <i class="fa-brands fa-blogger mr-2"></i> Blog
+                    </a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-400 hover:text-brand-green"><i class="fa-solid fa-bell"></i></button>
+                    <img class="h-8 w-8 rounded-full border border-gray-200" src="https://i.pravatar.cc/150?img=12" alt="User Avatar">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-64px)]">
+        
+        <aside class="hidden lg:block lg:col-span-3 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=2577&auto=format&fit=crop" class="w-12 h-12 rounded-full object-cover border-2 border-brand-green">
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm">Nhân Viên</h3>
+                        <p class="text-xs text-brand-orange font-semibold">Phạm Tuấn Hải</p>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500 space-y-2 border-t pt-3">
+                    <p><i class="fa-solid fa-clock text-brand-green mr-2"></i>Thời gian: <span class="text-gray-800">1 h- 1 h 30 p</span></p>
+                    <p><i class="fa-solid fa-utensils text-brand-green mr-2"></i>Khẩu phần: <span class="text-gray-800">4-5 người</span></p>
+                    <p><i class="fa-solid fa-star text-yellow-400 mr-2"></i>Đánh giá: <span class="text-gray-800">4.9/5</span></p>
+                </div>
+            </div>
+            
+            <div class="bg-brand-green/10 rounded-2xl p-4 border border-brand-green/20">
+                <h4 class="font-bold text-brand-darkGreen mb-1"><i class="fa-solid fa-ticket mr-2"></i>Voucher Mới</h4>
+                <p class="text-xs text-gray-600">Nhập mã <strong>ATDD50</strong> giảm ngay 50k cho đơn hàng đầu tiên.</p>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-9 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col overflow-hidden h-full relative">
+            
+            <div class="px-6 py-5 border-b border-gray-200 bg-white z-10 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-800 font-sans">Gọi Đầu Bếp Gia Đình</h2>
+                    <p class="text-sm text-gray-500">Lên thực đơn và chuẩn bị nguyên liệu tươi ngon tại nhà</p>
+                </div>
+                <div class="hidden sm:block">
+                     <span class="bg-orange-100 text-brand-orange px-3 py-1 rounded-full text-xs font-bold border border-orange-200">
+                        <i class="fa-solid fa-fire mr-1"></i> Đang Hot
+                     </span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 grid grid-cols-12 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <div class="col-span-6 md:col-span-5"><i class="fa-regular fa-square-check mr-2"></i>Sản phẩm</div>
+                <div class="col-span-2 text-right hidden md:block">Thành Tiền</div>
+                <div class="col-span-2 text-center hidden md:block">Đ.Vị</div>
+                <div class="col-span-2 text-center">SL</div>
+                <div class="col-span-1"></div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll p-0">
+                
+                <div class="group px-6 py-4 border-b border-gray-100 hover:bg-green-50/30 transition">
+                    <div class="grid grid-cols-12 items-start gap-4">
+                        <div class="col-span-7 md:col-span-5 flex items-start">
+                            <input type="checkbox" checked class="custom-checkbox mt-1.5 w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
+                            <div class="ml-4">
+                                <h3 class="font-bold text-gray-800 text-lg group-hover:text-brand-green transition">1. Combo Cá Sốt Cà Chua</h3>
+                                <ul class="mt-2 ml-1 text-sm text-gray-500 space-y-1 italic border-l-2 border-brand-green/30 pl-3">
+                                    <li>- Cá Chim</li>
+                                    <li>- Cà Chua</li>
+                                    <li>- Hành tím</li>
+                                    <li>- Gia Vị Tổng Hợp</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-right font-bold text-brand-orange hidden md:block mt-1">158.000 đ</div>
+                        <div class="col-span-2 text-center text-sm text-gray-600 hidden md:block mt-1">Combo</div>
+                        <div class="col-span-3 md:col-span-2 flex justify-center items-start mt-0.5">
+                            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <input type="text" value="1" class="w-8 text-center text-sm font-bold border-none focus:ring-0 p-0 text-gray-700">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-span-2 md:col-span-1 hidden lg:block text-center">
+                            <i class="fa-solid fa-fish text-gray-200 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group px-6 py-4 border-b border-gray-100 hover:bg-green-50/30 transition">
+                    <div class="grid grid-cols-12 items-center gap-4">
+                        <div class="col-span-7 md:col-span-5 flex items-center">
+                            <input type="checkbox" checked class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
+                            <div class="ml-4">
+                                <h3 class="font-bold text-gray-800 text-base">2. Xáo Gà Hành Tăm</h3>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-right font-bold text-gray-700 hidden md:block">46.000 đ</div>
+                        <div class="col-span-2 text-center text-sm text-gray-600 hidden md:block">Nồi</div>
+                        <div class="col-span-3 md:col-span-2 flex justify-center">
+                            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <input type="text" value="1" class="w-8 text-center text-sm font-bold border-none focus:ring-0 p-0 text-gray-700">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-span-2 md:col-span-1 text-right text-xs text-gray-400">x 46k</div>
+                    </div>
+                </div>
+
+                <div class="group px-6 py-4 border-b border-gray-100 hover:bg-green-50/30 transition">
+                    <div class="grid grid-cols-12 items-center gap-4">
+                        <div class="col-span-7 md:col-span-5 flex items-center">
+                            <input type="checkbox" checked class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
+                            <div class="ml-4">
+                                <h3 class="font-bold text-gray-800 text-base">3. Canh Măng</h3>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-right font-bold text-gray-700 hidden md:block">18.000 đ</div>
+                        <div class="col-span-2 text-center text-sm text-gray-600 hidden md:block">Nồi</div>
+                        <div class="col-span-3 md:col-span-2 flex justify-center">
+                            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <input type="text" value="1" class="w-8 text-center text-sm font-bold border-none focus:ring-0 p-0 text-gray-700">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-span-2 md:col-span-1 text-right text-xs text-gray-400">x 18k</div>
+                    </div>
+                </div>
+
+                <div class="group px-6 py-4 border-b border-gray-100 hover:bg-green-50/30 transition">
+                    <div class="grid grid-cols-12 items-center gap-4">
+                        <div class="col-span-7 md:col-span-5 flex items-center">
+                            <input type="checkbox" checked class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
+                            <div class="ml-4">
+                                <h3 class="font-bold text-gray-800 text-base">4. Canh Rau Cải</h3>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-right font-bold text-gray-700 hidden md:block">18.000 đ</div>
+                        <div class="col-span-2 text-center text-sm text-gray-600 hidden md:block">Nồi</div>
+                        <div class="col-span-3 md:col-span-2 flex justify-center">
+                            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-minus"></i></button>
+                                <input type="text" value="1" class="w-8 text-center text-sm font-bold border-none focus:ring-0 p-0 text-gray-700">
+                                <button class="px-2 py-1 text-gray-500 hover:text-brand-green text-xs"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                         <div class="col-span-2 md:col-span-1 text-right text-xs text-gray-400">x 18k</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 border-t border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            <i class="fa-solid fa-ticket text-brand-orange mr-2"></i>Voucher / Mã giảm giá
+                        </label>
+                        <div class="flex items-center">
+                            <input type="text" placeholder="Nhập mã voucher..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-brand-green focus:border-brand-green block w-full p-2.5">
+                            <button class="bg-white border border-l-0 border-gray-300 p-2.5 rounded-r-lg hover:bg-gray-100 text-brand-green">
+                                <i class="fa-solid fa-check-square text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm text-gray-600 border-b border-dashed border-gray-300 pb-2">
+                            <span>Tạm tính:</span>
+                            <span class="font-semibold">242.000 đ</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 border-b border-dashed border-gray-300 pb-2">
+                            <span>Phí Vận Chuyển (Phí VC):</span>
+                            <span class="font-semibold">0 đ</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="font-bold text-gray-800 text-lg">Tổng Tiền:</span>
+                            <div class="text-right">
+                                <span class="block text-2xl font-extrabold text-brand-orange">192.000 đ</span>
+                                <span class="text-xs text-gray-400">(Đã bao gồm VAT)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end items-center mt-6 space-y-3 sm:space-y-0 sm:space-x-4">
+                     
+                    <div class="hidden md:flex items-center justify-center mr-auto border-2 border-brand-orange/50 rounded-full px-6 py-2 bg-orange-50 hover:bg-orange-100 cursor-pointer transition">
+                        <span class="text-brand-orange font-bold uppercase tracking-wider text-sm">
+                            <i class="fa-solid fa-ticket mr-2"></i>Voucher
+                        </span>
+                    </div>
+
+                    <button class="w-full sm:w-auto px-8 py-3 bg-white border-2 border-brand-green text-brand-green font-bold rounded-xl hover:bg-green-50 transition transform hover:-translate-y-0.5 shadow-sm">
+                        Tra Cứu
+                    </button>
+                    
+                    <button class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-brand-orange to-red-500 text-white font-bold rounded-xl shadow-lg hover:shadow-orange-200 hover:from-orange-600 hover:to-red-600 transition transform hover:-translate-y-0.5 flex items-center justify-center">
+                        <i class="fa-solid fa-bell-concierge mr-2"></i> Gọi Đầu Bếp
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

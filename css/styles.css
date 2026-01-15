@@ -1,0 +1,26 @@
+/* Custom styles for the website */
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #F3F4F6;
+    color: #4A5568;
+}
+
+header {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    color: #4A5568;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #4CAF50;
+}
+
+/* Add more custom styles as needed */

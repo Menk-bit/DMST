@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AT & DD - Hệ Thống Dinh Dưỡng</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#4CAF50',
+                            darkGreen: '#2E7D32',
+                            orange: '#FF7043',
+                            bg: '#F9FAFB', 
+                            red: '#E53935'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        hand: ['Patrick Hand', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        /* Hiệu ứng cho tab Món ăn */
+        .menu-item-img {
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .menu-item:hover .menu-item-img {
+            transform: scale(1.05);
+            border-color: #FF7043;
+        }
+        .tooltip-arrow::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #374151 transparent transparent transparent;
+        }
+
+        /* Hiệu ứng cho tab Thực phẩm */
+        .custom-checkbox:checked {
+            background-color: #FF7043;
+            border-color: #FF7043;
+        }
+
+        /* Dropdown Menu Animation */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Hiển thị dropdown khi hover vào cha hoặc khi class 'active' được thêm vào */
+        .group:hover .dropdown-menu, 
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-link.active {
+            color: #FF7043;
+            border-bottom: 3px solid #FF7043;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-700 font-sans min-h-screen flex flex-col pb-20">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center"> 
+                <div class="flex items-center cursor-pointer gap-3" onclick="switchTab('dishes')">
+                    <div class="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center text-white text-xl">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-brand-darkGreen">AT & DD</span>
+                </div>
+
+                <nav class="hidden md:flex space-x-8 text-[15px] font-medium text-gray-500 h-full items-center">
+                    <a href="1.html" class="hover:text-brand-green px-1 flex items-center transition gap-2 h-full">
+                        <i class="fa-solid fa-user-doctor"></i> Chuyên Gia DD
+                    </a>
+                    
+                    <div class="relative group h-full flex items-center cursor-pointer">
+                        <div id="menu-nav-btn" class="text-brand-orange font-bold border-b-[3px] border-brand-orange px-1 flex items-center gap-2 h-full transition-colors duration-200">
+                            <i class="fa-solid fa-book-open"></i> Menu <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
+                        </div>
+                        
+                        <div class="dropdown-menu absolute top-[80%] left-0 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                            <div class="p-2">
+                                <a href="javascript:void(0)" onclick="switchTab('dishes')" class="block px-4 py-3 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition flex items-center group/item">
+                                    <div class="w-8 h-8 rounded-full bg-orange-100 text-brand-orange flex items-center justify-center mr-3 group-hover/item:bg-brand-orange group-hover/item:text-white transition">
+                                        <i class="fa-solid fa-utensils"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">Tra cứu món ăn</div>
+                                        <div class="text-[10px] text-gray-400 font-normal">Gợi ý thực đơn</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)" onclick="switchTab('ingredients')" class="block px-4 py-3 rounded-lg hover:bg-green-50 hover:text-brand-green transition flex items-center group/item">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 text-brand-green flex items-center justify-center mr-3 group-hover/item:bg-brand-green group-hover/item:text-white transition">
+                                        <i class="fa-solid fa-basket-shopping"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">Tra cứu thực phẩm</div>
+                                        <div class="text-[10px] text-gray-400 font-normal">Mua nguyên liệu</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="3.html" class="hover:text-brand-green px-1 flex items-center transition gap-2 h-full">
+                        <i class="fa-solid fa-fire-burner"></i> Nấu Ăn Tại Nhà
+                    </a>
+
+                    <a href="4.html" class="hover:text-brand-green px-1 flex items-center transition gap-2 h-full">
+                        <i class="fa-solid fa-basket-shopping"></i> Thực Phẩm
+                    </a>
+                    <a href="5.html" class="hover:text-brand-green px-1 flex items-center transition gap-2 h-full">
+                        <i class="fa-brands fa-blogger"></i> Blog
+                    </a>
+                </nav>
+
+                <div class="flex items-center gap-5">
+                    <div class="hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2.5 w-64">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-sm"></i>
+                        <input type="text" placeholder="Tìm kiếm..." class="bg-transparent border-none outline-none ml-3 text-sm text-gray-600 placeholder-gray-400 w-full">
+                    </div>
+                    <button class="text-gray-400 hover:text-brand-green relative">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                    </button>
+                    <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200 cursor-pointer">
+                        <img class="w-full h-full object-cover" src="https://i.pravatar.cc/150?img=12" alt="User Avatar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full mx-auto">
+
+        <div id="view-dishes" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-opacity duration-300">
+            
+            <div class="flex items-center mb-8 border-b-2 border-dashed border-brand-orange/30 pb-4">
+                <div class="text-brand-orange text-4xl mr-4">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-extrabold text-gray-800 font-hand">Thực đơn hôm nay cho bạn</h1>
+                    <p class="text-gray-500 text-sm mt-1">Gợi ý dinh dưỡng được cá nhân hóa</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-8 hover:shadow-lg transition duration-300">
+                <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-star text-yellow-400 mr-2"></i> Gợi Ý Của Chuyên Gia
+                    </h2>
+                    <span class="text-xs font-semibold text-brand-green bg-green-100 px-2 py-1 rounded">Đã kiểm duyệt</span>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-6">
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img relative">
+                                 <img src="https://placehold.co/200x200/fff3e0/ff7043?text=Com+Trang" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700 group-hover:text-brand-orange transition">Cơm Trắng</h3>
+                            <p class="text-xs text-gray-400">1 bát</p>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/fff3e0/ff7043?text=Thit+Luoc" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700 group-hover:text-brand-orange transition">Thịt Lợn Luộc</h3>
+                            <p class="text-xs text-gray-400">100g</p>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/fff3e0/ff7043?text=Trung+Chien" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700 group-hover:text-brand-orange transition">Trứng Chiên</h3>
+                            <p class="text-xs text-gray-400">2 quả</p>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/fff3e0/ff7043?text=Bap+Cai" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700 group-hover:text-brand-orange transition text-center">Bắp Cải Cà Chua</h3>
+                            <p class="text-xs text-gray-400">1 đĩa</p>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/fff3e0/ff7043?text=Qua+Na" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700 group-hover:text-brand-orange transition">Na (Mãng cầu)</h3>
+                            <p class="text-xs text-gray-400">1 quả</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-end md:items-center pt-4 border-t border-gray-100">
+                        <div class="relative group cursor-pointer mb-4 md:mb-0">
+                            <div class="flex items-center text-gray-500 hover:text-gray-800 transition">
+                                <span class="font-light mr-2">CG:</span>
+                                <span class="font-bold text-lg border-b border-gray-300 border-dashed">Nguyễn Thị Cá</span>
+                            </div>
+                            <div class="absolute bottom-full left-0 mb-3 hidden group-hover:block z-20 w-56">
+                                <div class="bg-white border-2 border-gray-800 rounded-lg p-3 shadow-xl tooltip-arrow text-center">
+                                    <div class="w-16 h-16 mx-auto mb-2 border border-gray-300 rounded flex items-center justify-center bg-gray-50">
+                                        <i class="fa-solid fa-fish text-3xl text-gray-400"></i>
+                                    </div>
+                                    <div class="font-hand font-bold text-lg leading-tight">Nguyễn Thị Cá</div>
+                                    <div class="text-[10px] text-gray-400 italic">Nhấn vào để xem chi tiết</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="switchTab('ingredients')" class="px-5 py-2 border-2 border-brand-orange text-brand-orange font-bold rounded-lg hover:bg-orange-50 transition transform active:scale-95 text-sm">
+                                Mua N.Liệu
+                            </button>
+                            <button class="px-5 py-2 bg-brand-orange text-white font-bold rounded-lg hover:bg-orange-600 transition transform active:scale-95 text-sm">
+                                Nấu Ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-8 hover:shadow-lg transition duration-300">
+                <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-fire text-red-500 mr-2"></i> Thực đơn phổ biến
+                    </h2>
+                    <span class="text-xs font-semibold text-gray-500">20 phút chế biến</span>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-6">
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/ffe0b2/ff7043?text=Com+Trang" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Cơm Trắng</h3>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/ffe0b2/ff7043?text=Bo+Xao" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Bò Xào Giá</h3>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/ffe0b2/ff7043?text=Xuc+Xich" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Xúc Xích Rán</h3>
+                        </div>
+                         <div class="flex flex-col items-center menu-item cursor-pointer group">
+                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/ffe0b2/ff7043?text=Canh+Bi" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Canh Bí</h3>
+                        </div>
+                         <div class="flex flex-col items-center menu-item cursor-pointer group">
+                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/ffe0b2/ff7043?text=Qua+Oi" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Ổi</h3>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row justify-between items-end md:items-center pt-4 border-t border-gray-100">
+                        <div class="text-gray-500 italic mb-4 md:mb-0">
+                            Hôm Nay <span class="text-brand-orange font-bold font-sans">362</span> lượt đã nấu
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="switchTab('ingredients')" class="px-5 py-2 border-2 border-brand-orange text-brand-orange font-bold rounded-lg hover:bg-orange-50 transition transform active:scale-95 text-sm">Mua N.Liệu</button>
+                            <button class="px-5 py-2 bg-brand-orange text-white font-bold rounded-lg hover:bg-orange-600 transition transform active:scale-95 text-sm">Nấu Ngay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-8 hover:shadow-lg transition duration-300">
+                 <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-fish text-blue-500 mr-2"></i> Món Cá Yêu Thích
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/e3f2fd/2196f3?text=Ca+Ran" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Cá Rán</h3>
+                        </div>
+                        <div class="flex flex-col items-center menu-item cursor-pointer group">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-3 menu-item-img">
+                                <img src="https://placehold.co/200x200/e3f2fd/2196f3?text=Ca+Kho" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-gray-700">Cá Kho</h3>
+                        </div>
+                         <div class="flex flex-col items-center menu-item cursor-pointer group opacity-50 hover:opacity-100 transition">
+                            <div class="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center mb-3 bg-gray-50 group-hover:border-brand-orange">
+                               <i class="fa-solid fa-plus text-gray-300 group-hover:text-brand-orange"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-400 group-hover:text-brand-orange">Thêm Món</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-ingredients" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
+            
+            <div class="lg:col-span-9">
+                <div class="flex items-center mb-6 border-b-2 border-dashed border-brand-green/30 pb-4">
+                    <div class="text-brand-green text-4xl mr-4">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-gray-800 font-hand">Món ăn cho bạn</h1>
+                        <p class="text-gray-500 text-sm mt-1">Chọn thực phẩm tươi ngon cho bữa ăn của bạn</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-gray-100 flex items-center">
+                    <i class="fa-solid fa-magnifying-glass text-brand-orange text-xl ml-2 mr-4"></i>
+                    <input type="text" placeholder="Tìm kiếm thực phẩm (Ví dụ: Thịt bò, rau cải...)" class="w-full text-lg outline-none text-gray-600 placeholder-gray-400">
+                </div>
+    
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+                    <div class="space-y-8">
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-gray-800 flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-cow text-xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-hand font-bold text-gray-800">Thịt Bò</h2>
+                            </div>
+                            
+                            <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Bap+Bo" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Bắp Bò</h3>
+                                        <p class="text-brand-orange font-bold text-sm">120.000đ / kg</p>
+                                        <p class="text-xs text-gray-500">NCC: CTY TNHH TP Sạch</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+    
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Than+Bo" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Thăn Bò</h3>
+                                        <p class="text-brand-orange font-bold text-sm">150.000đ / kg</p>
+                                        <p class="text-xs text-gray-500">NCC: Bom Cá</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-gray-800 flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-drumstick-bite text-xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-hand font-bold text-gray-800">Thịt Gà</h2>
+                            </div>
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" checked class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox accent-brand-orange">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Dui+Ga" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Đùi Gà</h3>
+                                        <p class="text-brand-orange font-bold text-sm">36.000đ / chiếc</p>
+                                        <p class="text-xs text-gray-500">NCC: CP Group</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="space-y-8">
+                          <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-brand-orange flex items-center justify-center mr-3 text-brand-orange">
+                                    <i class="fa-solid fa-leaf text-xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-hand font-bold text-gray-800">Rau Xanh</h2>
+                            </div>
+                            
+                            <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Bap+Cai" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Bắp Cải ĐL</h3>
+                                        <p class="text-brand-orange font-bold text-sm">36.000đ / kg</p>
+                                        <p class="text-xs text-gray-500">NCC: Farm Xanh</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+    
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Rau+Ngot" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Rau Ngót</h3>
+                                        <p class="text-brand-orange font-bold text-sm">18.000đ / mớ</p>
+                                        <p class="text-xs text-gray-500">NCC: Vườn Nhà</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-brand-orange flex items-center justify-center mr-3 text-brand-orange">
+                                    <i class="fa-solid fa-carrot text-xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-hand font-bold text-gray-800">Củ - Quả</h2>
+                            </div>
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" checked class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox accent-brand-orange">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Khoai+Tay" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Khoai Tây</h3>
+                                        <p class="text-brand-orange font-bold text-sm">30.000đ / kg</p>
+                                        <p class="text-xs text-gray-500">NCC: Đà Lạt</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="space-y-8">
+                          <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-gray-800 flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-seedling text-xl"></i>
+                                </div>
+                                <h2 class="text-xl font-hand font-bold text-gray-800 truncate">Hành - Tỏi - Mùi...</h2>
+                            </div>
+                            
+                            <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" checked class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox accent-brand-orange">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Hanh+Tim" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Hành tím</h3>
+                                        <p class="text-brand-orange font-bold text-sm">3.000đ / lượng</p>
+                                        <p class="text-xs text-gray-500">NCC: Chợ Quê</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+    
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Mui+Tau" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Mùi tàu</h3>
+                                        <p class="text-brand-orange font-bold text-sm">1.000đ / lá</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-md transition">
+                            <div class="flex items-center mb-4 pb-2 border-b border-gray-100">
+                                <div class="w-10 h-10 rounded-full border-2 border-gray-800 flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-droplet text-xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-hand font-bold text-gray-800">Gia Vị</h2>
+                            </div>
+                             <div class="mb-4 pb-4 border-b border-dashed border-gray-200 last:border-0 last:pb-0">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-orange rounded custom-checkbox">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                        <img src="https://placehold.co/200x200/e8f5e9/4caf50?text=Dau+An" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800">Dầu Ăn M6</h3>
+                                        <p class="text-brand-orange font-bold text-sm">70.000đ / chai</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3 justify-end">
+                                    <button class="px-3 py-1 text-xs border border-gray-800 rounded hover:bg-gray-100">Mua</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-around text-brand-orange mt-8">
+                    <i class="fa-solid fa-arrow-down-long animate-bounce"></i>
+                    <i class="fa-solid fa-arrow-down-long animate-bounce delay-100"></i>
+                    <i class="fa-solid fa-arrow-down-long animate-bounce delay-200"></i>
+                </div>
+            </div>
+    
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col h-auto sticky top-24">
+                    
+                    <div class="p-4 border-b-2 border-gray-800 flex justify-between items-center">
+                        <h2 class="text-2xl font-hand font-bold text-gray-800">Bạn Đã Chọn</h2>
+                        <div class="relative text-brand-orange">
+                            <i class="fa-solid fa-cart-shopping text-2xl"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </div>
+                    </div>
+    
+                    <div class="p-4 bg-orange-50/30 border-b border-gray-100">
+                        <div class="flex items-center text-gray-800 font-bold mb-2">
+                            <i class="fa-regular fa-square-check mr-2 text-brand-orange"></i> Sản Phẩm
+                        </div>
+                    </div>
+    
+                    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                        
+                        <div class="flex items-start relative group">
+                            <div class="absolute right-0 top-0 cursor-pointer text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></div>
+                            <input type="checkbox" checked class="mr-2 mt-6 accent-brand-orange">
+                            
+                            <div class="w-16 h-12 border border-gray-800 bg-white mr-3 flex items-center justify-center p-2">
+                                <i class="fa-solid fa-drumstick-bite text-xl text-gray-700"></i>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg text-gray-800">Đùi Gà</h4>
+                                <div class="flex justify-between items-end mt-1">
+                                    <div class="text-sm font-bold border-b border-gray-300 pb-0.5">
+                                        03 <span class="text-xs font-normal">± chiếc</span>
+                                    </div>
+                                    <span class="text-gray-800 font-bold">36.000đ</span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="border-gray-100">
+    
+                         <div class="flex items-start relative group">
+                            <div class="absolute right-0 top-0 cursor-pointer text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></div>
+                            <input type="checkbox" checked class="mr-2 mt-6 accent-brand-orange">
+                            
+                            <div class="w-16 h-12 border border-gray-800 bg-white mr-3 flex items-center justify-center p-2">
+                                <i class="fa-solid fa-carrot text-xl text-gray-700"></i>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg text-gray-800">Khoai Tây</h4>
+                                <div class="flex justify-between items-end mt-1">
+                                    <div class="text-sm font-bold border-b border-gray-300 pb-0.5">
+                                        09 <span class="text-xs font-normal">± lượng</span>
+                                    </div>
+                                    <span class="text-gray-800 font-bold">50.000đ</span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="border-gray-100">
+    
+                        <div class="flex items-start relative group">
+                            <div class="absolute right-0 top-0 cursor-pointer text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></div>
+                            <input type="checkbox" checked class="mr-2 mt-6 accent-brand-orange">
+                            
+                            <div class="w-16 h-12 border border-gray-800 bg-white mr-3 flex items-center justify-center p-2">
+                                <i class="fa-solid fa-seedling text-xl text-gray-700"></i>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg text-gray-800">Hành tím</h4>
+                                <div class="flex justify-between items-end mt-1">
+                                    <div class="text-sm font-bold border-b border-gray-300 pb-0.5">
+                                        02 <span class="text-xs font-normal">± lượng</span>
+                                    </div>
+                                    <span class="text-gray-800 font-bold">18.000đ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl flex gap-4">
+                        <button class="flex-1 py-3 px-4 border-2 border-brand-orange text-brand-orange font-bold text-lg rounded hover:bg-orange-50 transition">
+                            Tra Cứu
+                        </button>
+                        <button class="flex-1 py-3 px-4 border-2 border-brand-orange bg-white text-gray-800 font-bold text-lg rounded hover:bg-brand-orange hover:text-white transition shadow-sm">
+                            Mua Ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function switchTab(tab) {
+            const dishesView = document.getElementById('view-dishes');
+            const ingredientsView = document.getElementById('view-ingredients');
+            const menuBtn = document.getElementById('menu-nav-btn');
+
+            if (tab === 'dishes') {
+                dishesView.classList.remove('hidden');
+                ingredientsView.classList.add('hidden');
+                
+                // Hiệu ứng nhẹ khi chuyển tab
+                dishesView.style.opacity = 0;
+                setTimeout(() => { dishesView.style.opacity = 1; }, 50);
+
+                // Cập nhật trạng thái menu nav (màu cam)
+                menuBtn.classList.remove('text-brand-green', 'border-brand-green');
+                menuBtn.classList.add('text-brand-orange', 'border-brand-orange');
+            } else if (tab === 'ingredients') {
+                dishesView.classList.add('hidden');
+                ingredientsView.classList.remove('hidden');
+                
+                // Hiệu ứng nhẹ khi chuyển tab
+                ingredientsView.style.opacity = 0;
+                setTimeout(() => { ingredientsView.style.opacity = 1; }, 50);
+
+                // Cập nhật trạng thái menu nav (màu xanh lá để phân biệt)
+                menuBtn.classList.remove('text-brand-orange', 'border-brand-orange');
+                menuBtn.classList.add('text-brand-green', 'border-brand-green');
+            }
+        }
+    </script>
+</body>
+</html>
