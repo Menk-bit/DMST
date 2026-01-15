@@ -1,35 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("chat-input");
   const sendBtn = document.getElementById("send-button");
-  const chatBox = document.getElementById("chat-messages");
+  const messages = document.getElementById("chat-messages");
 
   function addMessage(text, sender) {
-    const msg = document.createElement("div");
-    msg.className =
-      sender === "user"
-        ? "self-end bg-green-600 text-white p-3 rounded-2xl max-w-[70%]"
-        : "self-start bg-white border p-3 rounded-2xl max-w-[70%]";
-    msg.innerText = text;
-    chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    const div = document.createElement("div");
+    div.className =
+      sender === "user" ? "text-right mb-2" : "text-left mb-2 text-green-700";
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
   }
 
-  sendBtn.addEventListener("click", async () => {
-    const message = input.value.trim();
-    if (!message) return;
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
 
-    addMessage(message, "user");
+    addMessage(text, "user");
     input.value = "";
 
-    addMessage("Đang tư vấn...", "bot");
+    // typing indicator
+    addMessage("Đang trả lời...", "bot");
 
-    const res = await fetch("/.netlify/functions/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
-    });
+    try {
+      const res = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
 
-    const data = await res.json();
-    chatBox.lastChild.innerText = data.reply;
+      const data = await res.json();
+
+      // remove typing
+      messages.lastChild.remove();
+      addMessage(data.reply || "Không có phản hồi.", "bot");
+    } catch (err) {
+      messages.lastChild.remove();
+      addMessage("Lỗi kết nối máy chủ.", "bot");
+    }
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  input.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendMessage();
   });
 });
