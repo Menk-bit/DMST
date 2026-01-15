@@ -9,41 +9,32 @@ export async function handler(event) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: [
-          {
-            role: "system",
-            content: [
-              { type: "text", text: "You are a friendly Vietnamese nutrition doctor." }
-            ]
-          },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: message }
-            ]
-          }
-        ]
+        model: "gpt-4o-mini",
+        input: `Bạn là một bác sĩ dinh dưỡng người Việt. Hãy trả lời thân thiện.\n\nNgười dùng: ${message}`
       })
     });
 
     const data = await response.json();
 
+    // DEBUG SAFETY (kept short)
     const reply =
-      data?.output_text ||
-      data?.output?.[0]?.content?.[0]?.text ||
-      "Xin lỗi, tôi không thể trả lời lúc này.";
+      data.output_text ??
+      data.output?.[0]?.content?.find(c => c.type === "output_text")?.text ??
+      data.output?.[0]?.content?.[0]?.text ??
+      null;
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply })
+      body: JSON.stringify({
+        reply: reply || "Xin lỗi, tôi không thể trả lời lúc này."
+      })
     };
 
   } catch (err) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        reply: "Có lỗi xảy ra. Vui lòng thử lại."
+        reply: "Có lỗi máy chủ. Vui lòng thử lại."
       })
     };
   }
