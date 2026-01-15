@@ -4,7 +4,7 @@ export async function handler(event) {
     const text = message.toLowerCase().trim();
 
     let reply =
-      "Xin lỗi, tôi chưa hiểu rõ. Bạn có thể hỏi lại theo cách khác không?";
+      "Chuyên gia sẽ phẩn hồi ngay. Bạn đợi một chút nhé!";
 
     // Greetings
     if (/^(hi|hello|hey|chào|xin chào)/i.test(text)) {
